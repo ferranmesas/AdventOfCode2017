@@ -6,7 +6,10 @@ nodes = {}
 
 @lru_cache()
 def weight(nodeId):
-    return nodes[nodeId]['weight'] + sum(weight(child) for child in nodes[nodeId]['children'])
+    node = nodes[nodeId]
+    if "childs_weight" not in node:
+        node["childs_weight"] = sum(weight(child) for child in node['children'])
+    return node['weight'] + node["childs_weight"]
 
 def is_balanced(nodeId):
     if len(nodes[nodeId]['children']) < 3:
@@ -26,9 +29,11 @@ def main():
         nodes[matches["id"]] = matches
 
     (root,) = nodes.keys() - set().union(*(node['children'] for node in nodes.values()))
-    print(root)
+    map(weight, nodes.keys())
 
-    sorted_nodes = sorted((n for n in nodes.values() if not is_balanced(n['id'])), reverse=True, key=lambda n: weight(n['id']))
-    print(list(weight(id) for id in list(sorted_nodes)[0]['children']))
+    unbalanced_nodes = [n for n in nodes.values() if not is_balanced(n['id'])]
+    print(unbalanced_nodes)
+    for node in ['utnrb', 'bbytzn', 'fzvctf']:
+        print(node, weight(node))
 if __name__ == "__main__":
     main()
