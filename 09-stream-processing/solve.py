@@ -9,22 +9,10 @@ garbage = re.compile(r'<.*?>')
 
 line = next(iter(fileinput.input())).strip()
 
-print(line)
-line = re.sub(",", "", line)
+
 print(line)
 line = re.sub(ignore, "", line)
 print(line)
-line = re.sub(garbage, "", line)
-print(line)
+garbages = re.findall(garbage, line)
 
-for char in line:
-    if char == "{":
-        stack += 1
-    elif char == "}":
-        total += stack
-        stack -= 1
-    else:
-        print(char)
-        print("woot")
-
-print(total)
+print(sum(len(g) - 2 for g in garbages))
